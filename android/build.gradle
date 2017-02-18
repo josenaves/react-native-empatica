@@ -37,10 +37,13 @@ allprojects {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
         }
+        flatDir {
+            dirs 'libs'
+        }
     }
 }
 
 dependencies {
+    compile(name: 'empalink-2.0', ext: 'aar')
     compile 'com.facebook.react:react-native:+'
-    compile 'com.empatica.empalink:empalink:2.1@aar'
 }
