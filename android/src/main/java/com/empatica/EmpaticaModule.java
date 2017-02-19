@@ -34,6 +34,7 @@ class EmpaticaModule extends ReactContextBaseJavaModule implements ActivityEvent
     private ReactApplicationContext mReactContext;
 
     private static final boolean DEBUG = true;
+
     private static final String EMPATICA_KEY_STATUS = "Status";
     private static final String EMPATICA_KEY_EVENTS = "Events";
 
@@ -48,6 +49,13 @@ class EmpaticaModule extends ReactContextBaseJavaModule implements ActivityEvent
     private static final String EMPATICA_EVENT_UPDATE_GSR = "updategsr";
     private static final String EMPATICA_EVENT_UPDATE_IBI = "updateibi";
     private static final String EMPATICA_EVENT_UPDATE_TEMPERATURE = "updatetemperature";
+
+    private static final String EMPATICA_STATUS_CONNECTED = "connected";
+    private static final String EMPATICA_STATUS_CONNECTING = "connecting";
+    private static final String EMPATICA_STATUS_DISCONNECTED = "disconnected";
+    private static final String EMPATICA_STATUS_DISCONNECTING = "disconnecting";
+    private static final String EMPATICA_STATUS_DISCOVERING = "discovering";
+    private static final String EMPATICA_STATUS_READY = "ready";
 
     private EmpaDeviceManager deviceManager;
 
@@ -64,16 +72,19 @@ class EmpaticaModule extends ReactContextBaseJavaModule implements ActivityEvent
         return "Empatica";
     }
 
-    private Map<String, Object> getStatusConstants() {
-        final Map<String, Object> constants = new HashMap<>();
-        constants.put("CONNECTED", EmpaStatus.CONNECTED);
-        constants.put("DISCONNECTED", EmpaStatus.DISCONNECTED);
-        constants.put("READY", EmpaStatus.READY);
+    private Map<String, String> getStatusConstants() {
+        final Map<String, String> constants = new HashMap<>();
+        constants.put("CONNECTED", EMPATICA_STATUS_CONNECTED);
+        constants.put("CONNECTING", EMPATICA_STATUS_CONNECTING);
+        constants.put("DISCONNECTED", EMPATICA_STATUS_DISCONNECTED);
+        constants.put("DISCONNECTING", EMPATICA_STATUS_DISCONNECTING);
+        constants.put("DISCOVERING", EMPATICA_STATUS_DISCOVERING);
+        constants.put("READY", EMPATICA_STATUS_READY);
         return constants;
     }
 
-    private Map<String, Object> getEventsConstants() {
-        final Map<String, Object> constants = new HashMap<>();
+    private Map<String, String> getEventsConstants() {
+        final Map<String, String> constants = new HashMap<>();
         constants.put("ERROR_BLUETOOTH", EMPATICA_EVENT_ERROR_BLUETOOTH);
         constants.put("UPDATE_STATUS", EMPATICA_EVENT_UPDATE_STATUS);
         constants.put("UPDATE_ACCELERATION", EMPATICA_EVENT_UPDATE_ACCELERATION);
@@ -169,8 +180,31 @@ class EmpaticaModule extends ReactContextBaseJavaModule implements ActivityEvent
     @Override
     public void didUpdateStatus(EmpaStatus status) {
         WritableMap params = Arguments.createMap();
-        params.putString("status", status.name());
-        sendEvent(EMPATICA_EVENT_UPDATE_STATUS, params);
+        String currentStatus = "";
+
+        if (status.equals(EmpaStatus.CONNECTED)) {
+            currentStatus = EMPATICA_STATUS_CONNECTED;
+        }
+        else if (status.equals(EmpaStatus.CONNECTING)) {
+            currentStatus = EMPATICA_STATUS_CONNECTING;
+        }
+        else if (status.equals(EmpaStatus.DISCONNECTED)) {
+            currentStatus = EMPATICA_STATUS_DISCONNECTED;
+        }
+        else if (status.equals(EmpaStatus.DISCONNECTING)) {
+            currentStatus = EMPATICA_STATUS_DISCONNECTING;
+        }
+        else if (status.equals(EmpaStatus.DISCOVERING)) {
+            currentStatus = EMPATICA_STATUS_DISCOVERING;
+        }
+        else if (status.equals(EmpaStatus.READY)) {
+            currentStatus = EMPATICA_STATUS_READY;
+        }
+
+        if (!currentStatus.equals("")) {
+            params.putString("status", currentStatus);
+            sendEvent(EMPATICA_EVENT_UPDATE_STATUS, params);
+        }
     }
 
     @Override
@@ -229,7 +263,6 @@ class EmpaticaModule extends ReactContextBaseJavaModule implements ActivityEvent
      * @param resultCode
      * @param data
      */
-    @Override
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         // The user chose not to enable Bluetooth
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
@@ -237,7 +270,21 @@ class EmpaticaModule extends ReactContextBaseJavaModule implements ActivityEvent
         }
     }
 
+    /**
+     * Called when host (activity/service) receives an {@link Activity#onActivityResult} call.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // The user chose not to enable Bluetooth
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
+            sendEvent(EMPATICA_EVENT_ERROR_BLUETOOTH, null);
+        }
+    }
+
     public void onNewIntent(Intent intent) {
         if (DEBUG) Log.d(TAG, "On new intent");
     }
