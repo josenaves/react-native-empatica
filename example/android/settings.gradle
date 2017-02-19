@@ -1,4 +1,4 @@
-rootProject.name = 'EmpaticaExample'
+rootProject.name = 'Empatica'
 
 include ':app'
 include ':react-native-empatica'
