@@ -14,7 +14,6 @@ import com.empatica.empalink.config.EmpaSensorType;
 import com.empatica.empalink.config.EmpaStatus;
 import com.empatica.empalink.delegate.EmpaDataDelegate;
 import com.empatica.empalink.delegate.EmpaStatusDelegate;
-import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -25,7 +24,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import java.util.HashMap;
 import java.util.Map;
 
-class EmpaticaModule extends ReactContextBaseJavaModule implements ActivityEventListener, EmpaDataDelegate, EmpaStatusDelegate {
+class EmpaticaModule extends ReactContextBaseJavaModule implements EmpaDataDelegate, EmpaStatusDelegate {
 
     private static final String TAG = EmpaticaModule.class.getName();
 
@@ -64,7 +63,6 @@ class EmpaticaModule extends ReactContextBaseJavaModule implements ActivityEvent
     EmpaticaModule(ReactApplicationContext reactContext) {
         super(reactContext);
         mReactContext = reactContext;
-        mReactContext.addActivityEventListener(this);
     }
 
     @Override
@@ -254,35 +252,6 @@ class EmpaticaModule extends ReactContextBaseJavaModule implements ActivityEvent
         WritableMap params = Arguments.createMap();
         params.putDouble("temperature", temp);
         sendEvent(EMPATICA_EVENT_UPDATE_TEMPERATURE, params);
-    }
-
-    /**
-     * Called when host (activity/service) receives an {@link Activity#onActivityResult} call.
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-        // The user chose not to enable Bluetooth
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
-            sendEvent(EMPATICA_EVENT_ERROR_BLUETOOTH, null);
-        }
-    }
-
-    /**
-     * Called when host (activity/service) receives an {@link Activity#onActivityResult} call.
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // The user chose not to enable Bluetooth
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
-            sendEvent(EMPATICA_EVENT_ERROR_BLUETOOTH, null);
-        }
     }
 
     public void onNewIntent(Intent intent) {
