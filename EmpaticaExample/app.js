@@ -31,7 +31,7 @@ export default class App extends React.Component {
 
     // Only triggers when the device is allowed (linked to your API key)
     onDiscoverDevice(bluetoothDevice, deviceName, rssi) {
-        Empatica.connectDevice(bluetoothDevice);
+        Empatica.connectDevice(bluetoothDevice.name);
         Empatica.stopScanning();
     }
 

@@ -25,7 +25,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EmpaticaModule extends ReactContextBaseJavaModule implements ActivityEventListener, EmpaDataDelegate, EmpaStatusDelegate {
+class EmpaticaModule extends ReactContextBaseJavaModule implements ActivityEventListener, EmpaDataDelegate, EmpaStatusDelegate {
 
     private static final String TAG = EmpaticaModule.class.getName();
 
