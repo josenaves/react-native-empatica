@@ -230,17 +230,15 @@ class EmpaticaModule extends ReactContextBaseJavaModule implements ActivityEvent
      * @param data
      */
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         // The user chose not to enable Bluetooth
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
             sendEvent(EMPATICA_EVENT_ERROR_BLUETOOTH, null);
         }
     }
 
-    protected void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-        // The user chose not to enable Bluetooth
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
-            sendEvent(EMPATICA_EVENT_ERROR_BLUETOOTH, null);
-        }
+    @Override
+    public void onNewIntent(Intent intent) {
+        if (DEBUG) Log.d(TAG, "On new intent");
     }
 }
