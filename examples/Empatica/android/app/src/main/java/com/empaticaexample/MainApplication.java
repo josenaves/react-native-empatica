@@ -3,7 +3,6 @@ package com.empaticaexample;
 import android.app.Application;
 import android.util.Log;
 
-import com.empatica.EmpaticaPackage;
 import com.facebook.react.ReactApplication;
 import com.empatica.EmpaticaPackage;
 import com.facebook.react.ReactInstanceManager;
