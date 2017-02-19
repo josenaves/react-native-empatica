@@ -96,6 +96,7 @@ export default class App extends React.Component {
         return (
             <View>
                 <Text>Hello Empatica!</Text>
+                <View>{this.renderContent()}</View>
             </View>
         );
     }
