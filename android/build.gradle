@@ -38,7 +38,7 @@ repositories {
 }
 
 dependencies {
+    compile project(':empalink-2.1')
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.facebook.react:react-native:+'
-    compile project(':empalink-2.1')
 }

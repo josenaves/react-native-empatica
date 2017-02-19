@@ -53,7 +53,7 @@ class EmpaticaModule extends ReactContextBaseJavaModule implements ActivityEvent
 
     private Map<String, BluetoothDevice> devices = new HashMap<>();
 
-    public EmpaticaModule(ReactApplicationContext reactContext) {
+    EmpaticaModule(ReactApplicationContext reactContext) {
         super(reactContext);
         mReactContext = reactContext;
         mReactContext.addActivityEventListener(this);
